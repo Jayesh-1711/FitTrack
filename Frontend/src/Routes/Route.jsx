@@ -12,7 +12,7 @@ export default function FitRoutes(){
         <Routes>
            <Route path="/home" element={<Home/>}></Route>
           <Route path="/" element={<Reg/>}>reg</Route>  
-          <Route path="/user/Log" element={<Log/>}></Route>
+          <Route path="/user/log" element={<Log/>}></Route>
           <Route path="/track" element={<RunTracker/>}></Route>
           <Route path="/profile" element={<Profile/>}></Route>
           <Route path="/run/:id" element={<RunDetails/>}></Route>

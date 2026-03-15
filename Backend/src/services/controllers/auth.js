@@ -3,41 +3,45 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-  const alreadyExist = await userModel.findOne({ email });
-  if (alreadyExist) {
-    return res.status(200).json({
-      message: "User Exist..",
-    });
-  }
+    const alreadyExist = await userModel.findOne({ email });
+    if (alreadyExist) {
+      return res.status(409).json({
+        message: "User already exists",
+      });
+    }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await userModel.create({
-    name,
-    email,
-    password: hashedPassword,
-  });
-
-  const token = jwt.sign(
-    { id: user._id },
-    process.env.JWT_SECRET
-  );
-
-  res.cookie("token", token);
-
-  res.status(200).json({
-    message: "user Created..",
-    token,
-    user: {
-      id: user._id,
+    const user = await userModel.create({
       name,
       email,
-    },
-  });
-};
+      password: hashedPassword,
+    });
 
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET
+    );
+
+    res.cookie("token", token);
+
+    res.status(201).json({
+      message: "User created",
+      token,
+      user: {
+        id: user._id,
+        name,
+        email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 const Login = async (req, res) => {
   const { email, password } = req.body;
 

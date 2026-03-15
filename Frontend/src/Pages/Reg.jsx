@@ -14,7 +14,7 @@ export default function Reg(){
     const email = e.target.email.value
     const password = e.target.password.value
 
-    const response = await axios.post("https://localhost:2000/api/user/reg",{
+    const response = await axios.post("https://fittrack-4-mlfn.onrender.com/api/user/reg",{
         name,
         email,
         password

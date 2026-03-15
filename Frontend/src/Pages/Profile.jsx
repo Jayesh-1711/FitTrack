@@ -15,7 +15,7 @@ export default function Profile() {
 
         const token = localStorage.getItem("token");
 
-        const res = await fetch("http://localhost:2000/api/run/RunTrack", {
+        const res = await fetch("https://fittrack-4-mlfn.onrender.com/api/run/RunTrack", {
           headers: { Authorization: `Bearer ${token}` }
         });
 

@@ -13,7 +13,7 @@ export default function Log() {
 
     try {
       const response = await axios.post(
-        "http://localhost:2000/api/user/login",
+        "https://fittrack-4-mlfn.onrender.com/api/user/login",
         { email, password }
       );
 

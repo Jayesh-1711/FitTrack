@@ -131,7 +131,7 @@ export default function RunTracker() {
       }
 
       const res = await fetch(
-        "http://localhost:2000/api/run/RunTrack",
+        "https://fittrack-4-mlfn.onrender.com/api/run/RunTrack",
         {
           method: "POST",
           headers: {

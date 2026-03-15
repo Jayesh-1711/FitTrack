@@ -92,7 +92,7 @@ export default function Reg(){
 
         <p className="text-sm text-center text-gray-400 mt-4">
           Already have an account?{" "}
-          <a href="/user/Log" className="text-[#F97316] hover:underline">
+          <a href="/user/log" className="text-[#F97316] hover:underline">
             Login
           </a>
         </p>

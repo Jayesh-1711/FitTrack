@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
-function connectDB(){
-    mongoose.connect("mongodb://localhost:27017/view")
-    .then(()=>{
-        console.log("mongoDb Connected..");
-    })
-    .catch(()=>{
-        console.log("error..",err);
-    })
-}
-export default connectDB
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.log("Database connection error:", err);
+  }
+};
+
+export default connectDB;

@@ -170,7 +170,7 @@ export default function RunDetails() {
         const token = localStorage.getItem("token");
 
         const res = await fetch(
-          `http://localhost:2000/api/run/${id}`,
+          `https://fittrack-4-mlfn.onrender.com/api/run/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 

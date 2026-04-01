@@ -22,7 +22,7 @@ export default function Reg(){
 
     console.log("User Registered:");
     navigate("/");
-  };
+  }
 
   return(
     <>

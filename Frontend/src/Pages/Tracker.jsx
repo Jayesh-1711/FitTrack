@@ -20,7 +20,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl:
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
-const MIN_DISTANCE = 0.005;
 
 function Recenter({ position }) {
   const map = useMap();
@@ -84,6 +83,7 @@ export default function RunTracker() {
 
         setPosition(newPoint);
 
+        // First point
         if (!lastPointRef.current) {
           lastPointRef.current = newPoint;
           setPath([newPoint]);
@@ -97,8 +97,21 @@ export default function RunTracker() {
           longitude
         );
 
-        if (d < MIN_DISTANCE) return;
+        const MAX_DISTANCE = 0.2; // 200m safety
 
+        // ❌ Ignore duplicate GPS
+        if (
+          lastPointRef.current[0] === latitude &&
+          lastPointRef.current[1] === longitude
+        ) return;
+
+        // ❌ Ignore GPS jitter (<3 meters)
+        if (d < 0.003) return;
+
+        // ❌ Ignore GPS jumps (>200 meters)
+        if (d > MAX_DISTANCE) return;
+
+        // ✅ Valid movement → count it (IMPORTANT FIX)
         setDistance(prev => prev + d);
 
         setPath(prev => [...prev, newPoint]);
@@ -111,7 +124,7 @@ export default function RunTracker() {
 
       {
         enableHighAccuracy: true,
-        maximumAge: 0,
+        maximumAge: 1000,
         timeout: 5000
       }
 
@@ -185,12 +198,10 @@ export default function RunTracker() {
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column", background:"#0F0F0F", color:"#FFFFFF" }}>
 
       {/* HEADER */}
-
       <div
         style={{
           height: "60px",
           background: "#0F0F0F",
-          color: "#FFFFFF",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -219,7 +230,6 @@ export default function RunTracker() {
       </div>
 
       {/* MAP */}
-
       <div style={{ flex: 1 }}>
 
         <MapContainer
@@ -252,13 +262,11 @@ export default function RunTracker() {
       </div>
 
       {/* CONTROLS */}
-
       <div
         style={{
           padding: "12px",
           background: "#1A1A1A",
-          borderTop: "1px solid #2A2A2A",
-          color:"#FFFFFF"
+          borderTop: "1px solid #2A2A2A"
         }}
       >
 

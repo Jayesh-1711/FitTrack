@@ -282,7 +282,7 @@ export default function RunTracker() {
     </div>
 
     {/* FLOATING BUTTON */}
-    <div className="absolute bottom-4 left-0 w-full flex justify-center z-[1000]">
+    <div className="absolute bottom-51 left-0 w-full flex justify-center z-[1000]">
       <button
         onClick={isRunning ? stopTracking : startTracking}   // ✅ FIXED
         className={`w-20 h-20 rounded-full text-xl font-bold shadow-xl active:scale-95 transition duration-150
@@ -291,7 +291,37 @@ export default function RunTracker() {
         {isRunning ? "■" : "▶"}                               {/* ✅ FIXED */}
       </button>
     </div>
+<div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50">
 
+  <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl py-3 px-4 flex justify-between items-center shadow-lg">
+
+    <button
+      onClick={() => navigate("/home")}
+      className="flex flex-col items-center text-gray-300 text-xs active:scale-95"
+    >
+      🏠
+      <span>Home</span>
+    </button>
+
+    <button
+      onClick={() => navigate("/track")}
+      className="flex flex-col items-center text-gray-300 text-xs active:scale-95"
+    >
+      ▶
+      <span>Track</span>
+    </button>
+
+    <button
+      onClick={() => navigate("/profile")}
+      className="flex flex-col items-center text-gray-300 text-xs active:scale-95"
+    >
+      👤
+      <span>Profile</span>
+    </button>
+
+  </div>
+
+</div>
   </div>
 );
 

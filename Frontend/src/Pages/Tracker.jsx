@@ -54,6 +54,9 @@ export default function RunTracker() {
   const [distance, setDistance] = useState(0);
   const [time, setTime] = useState(0);
 
+  // ✅ NEW STATE (only addition)
+  const [isRunning, setIsRunning] = useState(false);
+
   const navigate = useNavigate();
 
   const watchIdRef = useRef(null);
@@ -63,6 +66,9 @@ export default function RunTracker() {
   const startTracking = () => {
 
     if (watchIdRef.current) return;
+
+    // ✅ ADDED
+    setIsRunning(true);
 
     setPath([]);
     setDistance(0);
@@ -83,7 +89,6 @@ export default function RunTracker() {
 
         setPosition(newPoint);
 
-        // First point
         if (!lastPointRef.current) {
           lastPointRef.current = newPoint;
           setPath([newPoint]);
@@ -97,25 +102,19 @@ export default function RunTracker() {
           longitude
         );
 
-        const MAX_DISTANCE = 0.2; // 200m safety
+        const MAX_DISTANCE = 0.2;
 
-        // ❌ Ignore duplicate GPS
         if (
           lastPointRef.current[0] === latitude &&
           lastPointRef.current[1] === longitude
         ) return;
 
-        // ❌ Ignore GPS jitter (<3 meters)
         if (d < 0.003) return;
 
-        // ❌ Ignore GPS jumps (>200 meters)
         if (d > MAX_DISTANCE) return;
 
-        // ✅ Valid movement → count it (IMPORTANT FIX)
         setDistance(prev => prev + d);
-
         setPath(prev => [...prev, newPoint]);
-
         lastPointRef.current = newPoint;
 
       },
@@ -133,6 +132,9 @@ export default function RunTracker() {
   };
 
   const stopTracking = async () => {
+
+    // ✅ ADDED
+    setIsRunning(false);
 
     if (watchIdRef.current) {
       navigator.geolocation.clearWatch(watchIdRef.current);
@@ -152,7 +154,7 @@ export default function RunTracker() {
 
       if (!token) {
         alert("Please login first");
-        return;
+        navigate("/user/log")
       }
 
       const res = await fetch(
@@ -194,129 +196,103 @@ export default function RunTracker() {
     distance > 0 ? (time / 60 / distance).toFixed(2) : "0.00";
 
   return (
+  <div className="h-[100dvh] w-full bg-black text-white relative overflow-hidden">
 
-    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", background:"#0F0F0F", color:"#FFFFFF" }}>
+    {/* MAP */}
+    <MapContainer
+      center={[28.6139, 77.2090]}
+      zoom={15}
+      className="h-full w-full z-0"
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-      {/* HEADER */}
-      <div
-        style={{
-          height: "60px",
-          background: "#0F0F0F",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 16px"
-        }}
-      >
+      {position && <Marker position={position} />}
 
-        <h2 style={{ fontSize: "18px", fontWeight: "600" }}>
-          Run Tracker
-        </h2>
-
-        <button
-          onClick={() => navigate("/profile")}
-          style={{
-            background: "#F97316",
-            border: "none",
-            padding: "8px 14px",
-            borderRadius: "8px",
-            color: "#FFFFFF",
-            cursor: "pointer"
+      {path.length > 1 && (
+        <Polyline
+          positions={path}
+          pathOptions={{
+            color: "#22c55e",
+            weight: 6,
+            opacity: 0.9
           }}
-        >
-          Profile
-        </button>
+        />
+      )}
 
-      </div>
+      <Recenter position={position} />
+    </MapContainer>
 
-      {/* MAP */}
-      <div style={{ flex: 1 }}>
+    {/* TOP BAR */}
+    <div className="absolute top-0 left-0 w-full flex justify-between items-center px-4 py-3 z-[1000]">
+      <h2 className="text-lg font-semibold bg-black/70 px-3 py-1 rounded-lg backdrop-blur-md">
+        🏃 Run Tracker
+      </h2>
 
-        <MapContainer
-          center={[28.6139, 77.2090]}
-          zoom={15}
-          style={{ height: "100%", width: "100%" }}
-        >
-
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-          {position && <Marker position={position} />}
-
-          {path.length > 1 && (
-
-            <Polyline
-              positions={path}
-              pathOptions={{
-                color: "#F97316",
-                weight: 6,
-                opacity: 0.9
-              }}
-            />
-
-          )}
-
-          <Recenter position={position} />
-
-        </MapContainer>
-
-      </div>
-
-      {/* CONTROLS */}
-      <div
-        style={{
-          padding: "12px",
-          background: "#1A1A1A",
-          borderTop: "1px solid #2A2A2A"
-        }}
+      <button
+        onClick={() => navigate("/profile")}
+        className="bg-orange-500 px-3 py-2 rounded-lg text-sm shadow-md active:scale-95"
       >
+        Profile
+      </button>
+    </div>
 
-        <p>{position ? position.join(", ") : "Waiting for GPS..."}</p>
+    {/* GPS STATUS */}
+    <div className="absolute top-14 left-4 z-[1000]">
+      <p className="text-xs bg-black/40 px-3 py-1 rounded-lg backdrop-blur-md text-gray-200">
+        {position ? "📍 Tracking Active" : "📡 Waiting for GPS..."}
+      </p>
+    </div>
 
-        <p>
-          ⏱ {Math.floor(time / 60)}:
-          {String(time % 60).padStart(2, "0")}
-        </p>
+    {/* BOTTOM STATS */}
+    <div className="absolute bottom-24 left-0 w-full z-[1000] px-4">
+      <div className="bg-black/70 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-white/10">
 
-        <p>📏 {distance.toFixed(2)} km</p>
+        <div className="grid grid-cols-3 text-center">
 
-        <p>⚡ {pace} min/km</p>
+          <div>
+            <p className="text-gray-400 text-xs">Time</p>
+            <h2 className="text-xl font-extrabold text-white tracking-wide">
+              {Math.floor(time / 60)}:
+              {String(time % 60).padStart(2, "0")}
+            </h2>
+          </div>
 
-        <div style={{ display: "flex", gap: "10px" }}>
+          <div>
+            <p className="text-gray-400 text-xs">Distance</p>
+            <h2 className="text-xl font-extrabold text-white tracking-wide">
+              {distance.toFixed(2)} km
+            </h2>
+          </div>
 
-          <button
-            onClick={startTracking}
-            style={{
-              flex: 1,
-              padding: "14px",
-              borderRadius: "12px",
-              background: "#22C55E",
-              color: "#FFFFFF",
-              border: "none"
-            }}
-          >
-            Start
-          </button>
-
-          <button
-            onClick={stopTracking}
-            style={{
-              flex: 1,
-              padding: "14px",
-              borderRadius: "12px",
-              background: "#FB923C",
-              color: "#FFFFFF",
-              border: "none"
-            }}
-          >
-            Stop
-          </button>
+          <div>
+            <p className="text-gray-400 text-xs">Pace</p>
+            <h2 className="text-xl font-extrabold text-white tracking-wide">
+              {pace} /km
+            </h2>
+          </div>
 
         </div>
 
-      </div>
+        {/* LIVE SPEED */}
+        <div className="mt-3 text-center text-sm text-green-400 font-semibold">
+          ⚡ Speed: {distance > 0 ? (distance / (time / 3600)).toFixed(2) : 0} km/h
+        </div>
 
+      </div>
     </div>
 
-  );
+    {/* FLOATING BUTTON */}
+    <div className="absolute bottom-4 left-0 w-full flex justify-center z-[1000]">
+      <button
+        onClick={isRunning ? stopTracking : startTracking}   // ✅ FIXED
+        className={`w-20 h-20 rounded-full text-xl font-bold shadow-xl active:scale-95 transition duration-150
+        ${isRunning ? "bg-orange-500" : "bg-black/70"}`}      // ✅ FIXED
+      >
+        {isRunning ? "■" : "▶"}                               {/* ✅ FIXED */}
+      </button>
+    </div>
+
+  </div>
+);
 
 }

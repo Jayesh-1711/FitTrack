@@ -2,6 +2,8 @@ import React, { useEffect, useState, useMemo } from "react";
 import { MapContainer, TileLayer, Polyline } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+
 export default function Profile() {
 
   const [runs, setRuns] = useState([]);
@@ -61,6 +63,20 @@ export default function Profile() {
     monthlyDistance > 0
       ? (monthlyTime / 60 / monthlyDistance).toFixed(2)
       : "0.00";
+ const weeklyData = useMemo(() => {
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    return days.map((day, index) => {
+      const total = runs
+        .filter(r => new Date(r.createdAt).getDay() === index)
+        .reduce((sum, r) => sum + (r.distance || 0), 0);
+
+      return {
+        day,
+        distance: Number(total.toFixed(2))
+      };
+    });
+  }, [runs]);
 
   // HEATMAP
   const heatmapData = useMemo(() => {
@@ -102,209 +118,221 @@ export default function Profile() {
     return "bg-green-700";
 
   };
+  const handleLogout = () => {
+    
+if (window.confirm("Are you sure you want to logout?")) {
+  localStorage.removeItem("token");
+  navigate("/user/log"); 
+}
 
-  return (
+  
 
-    <div className="min-h-screen bg-[#0F0F0F] text-white flex flex-col">
+};
 
-      {/* HEADER */}
-      <div className="bg-[#1A1A1A] border-b border-[#2A2A2A] py-4 text-center text-xl font-semibold">
-        Profile
+return (
+  <div className="min-h-screen bg-black/80 text-white flex flex-col">
+
+    {/* HEADER */}
+    <div className="sticky top-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-b border-[#2A2A2A] py-4 px-4 flex justify-between items-center">
+      <h2 className="text-lg font-semibold">👤 Profile</h2>
+
+      <button
+        onClick={handleLogout}
+        className="bg-orange-500 px-3 py-1 rounded-lg text-sm font-semibold shadow active:scale-95"
+      >
+        Logout
+      </button>
+    </div>
+
+    <div className="flex-1 px-4 py-4 pb-40">
+
+      {/* TOTAL STATS */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
+
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center shadow-md">
+          <p className="text-gray-400 text-xs">Total Runs</p>
+          <p className="font-bold text-xl">{runs.length}</p>
+        </div>
+
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center shadow-md">
+          <p className="text-gray-400 text-xs">Distance</p>
+          <p className="text-orange-400 font-bold text-xl">
+            {totalDistance.toFixed(2)} km
+          </p>
+        </div>
+
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center shadow-md">
+          <p className="text-gray-400 text-xs">Time</p>
+          <p className="text-orange-300 font-bold text-xl">
+            {Math.floor(totalTime / 60)} min
+          </p>
+        </div>
+
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center shadow-md">
+          <p className="text-gray-400 text-xs">Avg Pace</p>
+          <p className="text-orange-400 font-bold text-xl">
+            {avgPace} min/km
+          </p>
+        </div>
+
       </div>
 
-      <div className="flex-1 px-4 py-4 pb-40">
+      {/* MONTH */}
+      <h2 className="text-sm font-semibold mb-3 text-gray-300">
+        This Month
+      </h2>
 
-        {/* TOTAL STATS */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
 
-        <div className="grid grid-cols-2 gap-3 mb-6">
-
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 text-center hover:border-[#F97316] transition">
-            <p className="text-gray-400 text-sm">Total Runs</p>
-            <p className="font-bold text-lg">📊 {runs.length}</p>
-          </div>
-
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 text-center hover:border-[#F97316] transition">
-            <p className="text-gray-400 text-sm">Total Distance</p>
-            <p className="text-[#F97316] font-bold text-lg">
-              🏃 {totalDistance.toFixed(2)} km
-            </p>
-          </div>
-
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 text-center hover:border-[#F97316] transition">
-            <p className="text-gray-400 text-sm">Total Time</p>
-            <p className="text-[#FB923C] font-bold text-lg">
-              ⏱ {Math.floor(totalTime / 60)} min
-            </p>
-          </div>
-
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 text-center hover:border-[#F97316] transition">
-            <p className="text-gray-400 text-sm">Avg Pace</p>
-            <p className="text-[#FB923C] font-bold text-lg">
-              ⚡ {avgPace} min/km
-            </p>
-          </div>
-
-        </div>
-        <h2 className="text-lg font-semibold mb-3 text-[#FB923C]">
-          This Month
-        </h2>
-
-        <div className="grid grid-cols-2 gap-3 mb-6">
-
-          <div className="bg-[#1A1A1A] border border-[#262626] rounded-xl p-4 text-center hover:border-[#F97316] transition">
-            <p className="text-gray-400 text-sm">Runs</p>
-            <p className="font-bold text-lg">{monthlyRuns.length}</p>
-          </div>
-
-          <div className="bg-[#1A1A1A] border border-[#262626] rounded-xl p-4 text-center hover:border-[#F97316] transition">
-            <p className="text-gray-400 text-sm">Distance</p>
-            <p className="text-[#F97316] font-bold text-lg">
-              {monthlyDistance.toFixed(2)} km
-            </p>
-          </div>
-
-          <div className="bg-[#1A1A1A] border border-[#262626] rounded-xl p-4 text-center hover:border-[#F97316] transition">
-            <p className="text-gray-400 text-sm">Time</p>
-            <p className="text-[#FB923C] font-bold text-lg">
-              {Math.floor(monthlyTime / 60)} min
-            </p>
-          </div>
-
-          <div className="bg-[#1A1A1A] border border-[#262626] rounded-xl p-4 text-center hover:border-[#F97316] transition">
-            <p className="text-gray-400 text-sm">Avg Pace</p>
-            <p className="text-[#FB923C] font-bold text-lg">
-              {monthlyAvgPace} min/km
-            </p>
-          </div>
-
-        </div>
-        {/* HEATMAP */}
-
-        <h2 className="text-lg font-semibold mb-3 text-[#FB923C]">
-          Last 30 Days Activity
-        </h2>
-
-        <div className="bg-[#151515] rounded-xl border border-gray-700 p-4 mb-6">
-
-          <div className="grid grid-cols-10 gap-2">
-
-            {heatmapData.map((d, i) => (
-
-              <div
-                key={i}
-                title={`${d.date.toDateString()} - ${d.count} runs`}
-                className={`h-5 w-5 rounded border border-gray-300 hover:scale-110 transition ${getHeatColor(d.count)}`}
-              />
-
-            ))}
-
-          </div>
-
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center">
+          <p className="text-gray-400 text-xs">Runs</p>
+          <p className="font-bold text-lg">{monthlyRuns.length}</p>
         </div>
 
-        {/* RUN HISTORY */}
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center">
+          <p className="text-gray-400 text-xs">Distance</p>
+          <p className="text-orange-400 font-bold text-lg">
+            {monthlyDistance.toFixed(2)} km
+          </p>
+        </div>
 
-        <h2 className="text-lg font-semibold mb-4 text-[#FB923C]">
-          Run History
-        </h2>
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center">
+          <p className="text-gray-400 text-xs">Time</p>
+          <p className="text-orange-300 font-bold text-lg">
+            {Math.floor(monthlyTime / 60)} min
+          </p>
+        </div>
 
-        {runs.length > 0 ? (
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center">
+          <p className="text-gray-400 text-xs">Avg Pace</p>
+          <p className="text-orange-400 font-bold text-lg">
+            {monthlyAvgPace} min/km
+          </p>
+        </div>
 
-          runs.map(run => {
+      </div>
+      <h2 className="text-sm font-semibold mb-3 text-gray-300">Weekly Activity</h2>
 
-            const path = Array.isArray(run.route)
-              ? run.route.map(p => [p.lat, p.lng])
-              : [];
+        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 mb-6">
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={weeklyData}>
+              <XAxis dataKey="day" stroke="#9ca3af" />
+              <YAxis stroke="#9ca3af" />
+              <Tooltip contentStyle={{ backgroundColor: "#1A1A1A", border: "none" }} />
+              <Line type="monotone" dataKey="distance" stroke="#F97316" strokeWidth={3} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
 
-            return (
+      {/* HEATMAP */}
+      <h2 className="text-sm font-semibold mb-3 text-gray-300">
+        Last 30 Days Activity
+      </h2>
 
-              <div
-                key={run._id}
-                className="bg-[#1A1A1A] border border-[#262626] rounded-2xl mb-4 overflow-hidden hover:border-[#F97316] transition"
-              >
+      <div className="bg-[#1A1A1A] rounded-2xl border border-[#2A2A2A] p-4 mb-6 shadow-md">
 
-                <div className="h-36">
+        <div className="grid grid-cols-10 gap-2">
+          {heatmapData.map((d, i) => (
+            <div
+              key={i}
+              title={`${d.date.toDateString()} - ${d.count} runs`}
+              className={`h-5 w-5 rounded-md transition hover:scale-110 ${getHeatColor(d.count)}`}
+            />
+          ))}
+        </div>
 
-                  {path.length > 0 && (
+      </div>
 
-                    <MapContainer
-                      center={path[0]}
-                      zoom={14}
-                      scrollWheelZoom={false}
-                      zoomControl={false}
-                      dragging={false}
-                      doubleClickZoom={false}
-                      style={{ height: "100%", width: "100%" }}
-                    >
+      {/* RUN HISTORY */}
+      <h2 className="text-sm font-semibold mb-4 text-gray-300">
+        Run History
+      </h2>
 
-                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {runs.length > 0 ? (
 
-                      <Polyline
-                        positions={path}
-                        pathOptions={{
-                          color: "#F97316",
-                          weight: 5,
-                          opacity: 0.9
-                        }}
-                      />
+        runs.map(run => {
 
-                    </MapContainer>
+          const path = Array.isArray(run.route)
+            ? run.route.map(p => [p.lat, p.lng])
+            : [];
 
-                  )}
+          return (
 
-                </div>
+            <div
+              key={run._id}
+              className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl mb-4 overflow-hidden shadow-md"
+            >
 
-                <div className="p-4">
-
-                  <p className="text-gray-400 text-sm">
-                    {new Date(run.createdAt).toLocaleDateString()}
-                  </p>
-
-                  <div className="flex justify-between mt-2 text-sm font-semibold">
-                    <span>{run.distance?.toFixed(2)} km</span>
-                    <span>{Math.floor(run.duration / 60)} min</span>
-                  </div>
-
-                  <p className="text-[#FB923C] font-semibold mt-1">
-                    ⚡ {run.pace?.toFixed(2)} min/km
-                  </p>
-
-                  <button
-                    onClick={() => navigate(`/run/${run._id}`)}
-                    className="inline-block mt-3 px-3 py-1 text-xs bg-[#F97316] text-white rounded-full hover:bg-[#FB923C] transition"
+              <div className="h-36">
+                {path.length > 0 && (
+                  <MapContainer
+                    center={path[0]}
+                    zoom={14}
+                    scrollWheelZoom={false}
+                    zoomControl={false}
+                    dragging={false}
+                    doubleClickZoom={false}
+                    className="h-full w-full"
                   >
-                    View Details
-                  </button>
+                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
+                    <Polyline
+                      positions={path}
+                      pathOptions={{
+                        color: "#F97316"
+                      }}
+                    />
+                  </MapContainer>
+                )}
+              </div>
+
+              <div className="p-4">
+
+                <p className="text-gray-400 text-xs">
+                  {new Date(run.createdAt).toLocaleDateString()}
+                </p>
+
+                <div className="flex justify-between mt-2 text-sm font-semibold">
+                  <span>{run.distance?.toFixed(2)} km</span>
+                  <span>{Math.floor(run.duration / 60)} min</span>
                 </div>
+
+                <p className="text-orange-400 font-semibold mt-1">
+                  ⚡ {run.pace?.toFixed(2)} min/km
+                </p>
+
+                <button
+                  onClick={() => navigate(`/run/${run._id}`)}
+                  className="mt-3 px-3 py-1 text-xs bg-orange-500 rounded-full shadow active:scale-95"
+                >
+                  View Details
+                </button>
 
               </div>
 
-            );
+            </div>
 
-          })
+          );
 
-        ) : (
-          <p className="text-gray-400">No runs yet.</p>
-        )}
+        })
 
-      </div>
-
-      {/* START RUN BUTTON */}
-
-      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50">
-
-        <button
-          onClick={() => navigate("/track")}
-          className="w-16 h-16 bg-[#22C55E] text-white rounded-full shadow-[0_0_20px_rgba(34,197,94,0.6)] text-3xl flex items-center justify-center active:scale-95 transition"
-        >
-          +
-        </button>
-
-      </div>
+      ) : (
+        <p className="text-gray-400 text-sm">No runs yet.</p>
+      )}
 
     </div>
 
-  );
+    {/* FLOATING BUTTON */}
+    <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50">
+      <button
+        onClick={() => navigate("/track")}
+        className="w-16 h-16 bg-orange-500 rounded-full shadow-[0_0_20px_rgba(249,115,22,0.6)] text-3xl flex items-center justify-center active:scale-95 transition"
+      >
+        +
+      </button>
+    </div>
+
+  </div>
+);
 
 }

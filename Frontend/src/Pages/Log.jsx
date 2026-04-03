@@ -64,12 +64,19 @@ export default function Log() {
           />
         </div>
 
+       
         <button
-          type="submit"
-          className="w-full bg-[#F97316] text-white py-2 rounded-md hover:bg-[#FB923C] transition duration-200"
-        >
-          Login
-        </button>
+  type="submit"
+  className="w-full py-2 rounded-lg font-semibold text-white
+  bg-gradient-to-r from-orange-500 to-orange-600
+  shadow-[0_0_10px_rgba(249,115,22,0.4)]
+  transition-all duration-200 ease-in-out
+  hover:scale-95
+  hover:shadow-[0_0_20px_rgba(249,115,22,0.7)]
+  active:scale-90"
+>
+  Login
+</button>
       </form>
     </div>
   );

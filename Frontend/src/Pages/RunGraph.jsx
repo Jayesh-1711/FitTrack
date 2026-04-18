@@ -32,7 +32,7 @@ export default function RunGraphs({ data }) {
           <Tooltip />
           <Legend />
 
-          {/* Time Line */}
+          
           <Line
             type="monotone"
             dataKey="time"
@@ -41,7 +41,7 @@ export default function RunGraphs({ data }) {
             strokeWidth={3}
           />
 
-          {/* Pace Line */}
+          
           <Line
             type="monotone"
             dataKey="pace"

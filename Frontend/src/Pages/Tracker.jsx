@@ -54,7 +54,7 @@ export default function RunTracker() {
   const [distance, setDistance] = useState(0);
   const [time, setTime] = useState(0);
 
-  // ✅ NEW STATE (only addition)
+  
   const [isRunning, setIsRunning] = useState(false);
 
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ export default function RunTracker() {
 
     if (watchIdRef.current) return;
 
-    // ✅ ADDED
+    
     setIsRunning(true);
 
     setPath([]);
@@ -133,7 +133,7 @@ export default function RunTracker() {
 
   const stopTracking = async () => {
 
-    // ✅ ADDED
+    
     setIsRunning(false);
 
     if (watchIdRef.current) {
@@ -198,7 +198,7 @@ export default function RunTracker() {
   return (
   <div className="h-[100dvh] w-full bg-black text-white relative overflow-hidden">
 
-    {/* MAP */}
+    
     <MapContainer
       center={[28.6139, 77.2090]}
       zoom={15}
@@ -222,7 +222,7 @@ export default function RunTracker() {
       <Recenter position={position} />
     </MapContainer>
 
-    {/* TOP BAR */}
+    
     <div className="absolute top-0 left-0 w-full flex justify-between items-center px-4 py-3 z-[1000]">
       <h2 className="text-lg font-semibold bg-black/70 px-3 py-1 rounded-lg backdrop-blur-md">
         🏃 Run Tracker
@@ -236,14 +236,14 @@ export default function RunTracker() {
       </button>
     </div>
 
-    {/* GPS STATUS */}
+    
     <div className="absolute top-14 left-4 z-[1000]">
       <p className="text-xs bg-black/40 px-3 py-1 rounded-lg backdrop-blur-md text-gray-200">
         {position ? "📍 Tracking Active" : "📡 Waiting for GPS..."}
       </p>
     </div>
 
-    {/* BOTTOM STATS */}
+    
     <div className="absolute bottom-24 left-0 w-full z-[1000] px-4">
       <div className="bg-black/70 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-white/10">
 
@@ -281,14 +281,14 @@ export default function RunTracker() {
       </div>
     </div>
 
-    {/* FLOATING BUTTON */}
+    
     <div className="absolute bottom-51 left-0 w-full flex justify-center z-[1000]">
       <button
-        onClick={isRunning ? stopTracking : startTracking}   // ✅ FIXED
+        onClick={isRunning ? stopTracking : startTracking}   
         className={`w-20 h-20 rounded-full text-xl font-bold shadow-xl active:scale-95 transition duration-150
-        ${isRunning ? "bg-orange-500" : "bg-black/70"}`}      // ✅ FIXED
+        ${isRunning ? "bg-orange-500" : "bg-black/70"}`}      
       >
-        {isRunning ? "■" : "▶"}                               {/* ✅ FIXED */}
+        {isRunning ? "■" : "▶"}                               
       </button>
     </div>
 <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50">

@@ -36,7 +36,7 @@ export default function Log() {
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
-        {/* Email */}
+        
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300">
             Email
@@ -50,7 +50,7 @@ export default function Log() {
           />
         </div>
 
-        {/* Password */}
+        
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-300">
             Password

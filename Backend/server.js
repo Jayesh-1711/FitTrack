@@ -5,13 +5,13 @@ import connectDB from "./src/services/db.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
-/* load environment variables */
+
 dotenv.config();
 
-/* connect database */
+
 connectDB();
 
-/* server port */
+
 const PORT = process.env.PORT || 2000;
 
 app.listen(PORT, () => {

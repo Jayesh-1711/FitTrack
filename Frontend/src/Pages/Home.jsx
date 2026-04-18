@@ -6,7 +6,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [runs, setRuns] = useState([]);
 
-  // FETCH RUN DATA
+  
   useEffect(() => {
 
     const fetchRuns = async () => {
@@ -32,7 +32,7 @@ export default function Home() {
 
   }, []);
 
-  // WEEKLY CALCULATION
+  
   const now = new Date();
 
   const weeklyRuns = runs.filter(r => {
@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] via-[#111111] to-[#1A1A1A] text-white flex flex-col px-4 py-6">
 
-      {/* HEADER */}
+      
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">🏃 FitTrack</h1>
 
@@ -60,7 +60,7 @@ export default function Home() {
         </button>
       </div>
 
-      {/* MOTIVATION */}
+    
       <div className="mb-8">
         <h2 className="text-3xl font-extrabold leading-tight">
           Ready for your <br /> next run?
@@ -70,7 +70,7 @@ export default function Home() {
         </p>
       </div>
 
-      {/* WEEKLY STATS */}
+      
       <div className="grid grid-cols-2 gap-4 mb-10">
 
         <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center">
@@ -89,7 +89,7 @@ export default function Home() {
 
       </div>
 
-      {/* START BUTTON */}
+      
       <div className="flex justify-center mt-auto mb-16">
         <button
           onClick={() => navigate("/track")}
@@ -105,7 +105,7 @@ export default function Home() {
         </button>
       </div>
 
-      {/* BOTTOM NAV */}
+      
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50">
 
   <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl py-3 px-4 flex justify-between items-center shadow-lg">

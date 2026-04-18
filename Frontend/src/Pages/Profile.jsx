@@ -78,7 +78,7 @@ export default function Profile() {
     });
   }, [runs]);
 
-  // HEATMAP
+  
   const heatmapData = useMemo(() => {
 
     const data = [];
@@ -109,7 +109,7 @@ export default function Profile() {
 
   }, [runs]);
 
-  // LIGHT HEATMAP COLORS
+  
   const getHeatColor = (count) => {
 
     if (count === 0) return "bg-gray-200";
@@ -132,7 +132,7 @@ if (window.confirm("Are you sure you want to logout?")) {
 return (
   <div className="min-h-screen bg-black/80 text-white flex flex-col">
 
-    {/* HEADER */}
+    
     <div className="sticky top-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-b border-[#2A2A2A] py-4 px-4 flex justify-between items-center">
       <h2 className="text-lg font-semibold">👤 Profile</h2>
 
@@ -146,7 +146,7 @@ return (
 
     <div className="flex-1 px-4 py-4 pb-40">
 
-      {/* TOTAL STATS */}
+      
       <div className="grid grid-cols-2 gap-3 mb-6">
 
         <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-4 text-center shadow-md">
@@ -177,7 +177,7 @@ return (
 
       </div>
 
-      {/* MONTH */}
+  
       <h2 className="text-sm font-semibold mb-3 text-gray-300">
         This Month
       </h2>
@@ -224,7 +224,7 @@ return (
           </ResponsiveContainer>
         </div>
 
-      {/* HEATMAP */}
+      
       <h2 className="text-sm font-semibold mb-3 text-gray-300">
         Last 30 Days Activity
       </h2>
@@ -243,7 +243,7 @@ return (
 
       </div>
 
-      {/* RUN HISTORY */}
+      
       <h2 className="text-sm font-semibold mb-4 text-gray-300">
         Run History
       </h2>
@@ -322,7 +322,7 @@ return (
 
     </div>
 
-    {/* FLOATING BUTTON */}
+    
     <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50">
       <button
         onClick={() => navigate("/track")}

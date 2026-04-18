@@ -41,7 +41,7 @@ export default function Register() {
         className="w-full max-w-sm bg-[#1A1A1A]/80 backdrop-blur-xl border border-[#2A2A2A] p-6 rounded-2xl shadow-lg"
       >
 
-        {/* TITLE */}
+        
         <h2 className="text-3xl font-bold text-center text-white mb-1">
           Create Account 🚀
         </h2>
@@ -49,7 +49,7 @@ export default function Register() {
           Start your fitness journey
         </p>
 
-        {/* NAME */}
+        
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-1">
             Name
@@ -63,7 +63,7 @@ export default function Register() {
           />
         </div>
 
-        {/* EMAIL */}
+        
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-1">
             Email
@@ -77,7 +77,7 @@ export default function Register() {
           />
         </div>
 
-        {/* PASSWORD */}
+        
         <div className="mb-5">
           <label className="block text-sm text-gray-400 mb-1">
             Password
@@ -91,7 +91,7 @@ export default function Register() {
           />
         </div>
 
-        {/* BUTTON */}
+       
         <button
           type="submit"
           disabled={loading}
@@ -102,12 +102,12 @@ export default function Register() {
           disabled:opacity-70"
         >
 
-          {/* RIPPLE */}
+          
           <span className="absolute inset-0 overflow-hidden rounded-lg">
             <span className="absolute inset-0 bg-white opacity-0 active:opacity-20 active:animate-ping"></span>
           </span>
 
-          {/* CONTENT */}
+          
           <span className="relative flex items-center justify-center gap-2">
 
             {loading && (
@@ -120,7 +120,7 @@ export default function Register() {
 
         </button>
 
-        {/* LOGIN LINK */}
+        
         <p className="text-center text-gray-400 text-sm mt-4">
           Already have an account?{" "}
           <span
